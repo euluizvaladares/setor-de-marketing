@@ -20,7 +20,7 @@ function HeroReveal({ mobile = false }: { mobile?: boolean }) {
   return (
     // eslint-disable-next-line jsx-a11y/media-has-caption
     <video
-      src="/api/video"
+      src="/hero-video.mp4"
       autoPlay
       muted
       loop
