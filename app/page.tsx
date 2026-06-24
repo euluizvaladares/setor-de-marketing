@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 function HeroReveal({ mobile = false }: { mobile?: boolean }) {
@@ -246,23 +246,6 @@ const SERVICES_GESTAO = [
 
 type Service = { tag: string; title: string; img: string; desc: string }
 
-function ServiceAccordion({ items, startIndex = 0 }: { items: Service[]; startIndex?: number }) {
-  return (
-    <div className="svc-list">
-      {items.map((s, i) => (
-        <a key={s.title} href="#orcamento" className="svc-row">
-          <span className="svc-num">({String(startIndex + i + 1).padStart(2, '0')})</span>
-          <span className="svc-title">{s.title}</span>
-          <span className="svc-desc">{s.desc}</span>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={s.img} alt="" aria-hidden="true" className="svc-float" loading="lazy" />
-          <span className="svc-plus" aria-hidden="true" />
-        </a>
-      ))}
-    </div>
-  )
-}
-
 /* ─── FAQ ─── */
 const FAQ = [
   { q: 'Quais serviços a Setor oferece?', a: 'Tudo que envolve a presença do seu negócio — de identidade visual, site e materiais gráficos a gestão de redes sociais, tráfego pago, SEO e estratégia. Você contrata um projeto pontual ou coloca a gente como o seu setor de marketing fixo.' },
@@ -373,6 +356,73 @@ function ServiceCardsMobile({ items, startIndex = 0 }: { items: Service[]; start
           </div>
         </a>
       ))}
+    </div>
+  )
+}
+
+/* ─── Serviços: scrollytelling com palco fixo (desktop) ─── */
+function ServiceStory({ items, split }: { items: Service[]; split: number }) {
+  const N = items.length
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const barRef = useRef<HTMLSpanElement>(null)
+  const [active, setActive] = useState(0)
+  const activeRef = useRef(0)
+
+  useEffect(() => {
+    const wrap = wrapRef.current
+    if (!wrap) return
+    let raf = 0
+    const onScroll = () => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        const rect = wrap.getBoundingClientRect()
+        const total = wrap.offsetHeight - window.innerHeight
+        const scrolled = Math.min(Math.max(-rect.top, 0), total)
+        const p = total > 0 ? scrolled / total : 0
+        if (barRef.current) barRef.current.style.transform = `scaleX(${p})`
+        const idx = Math.min(N - 1, Math.floor(p * N * 0.9999))
+        if (idx !== activeRef.current) { activeRef.current = idx; setActive(idx) }
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf) }
+  }, [N])
+
+  const cur = items[active]
+  const num = String(active + 1).padStart(2, '0')
+  const tot = String(N).padStart(2, '0')
+
+  return (
+    <div ref={wrapRef} className="story" style={{ height: `${N * 38 + 90}vh` }}>
+      <div className="story-stage">
+        <div className="story-prog"><span ref={barRef} /></div>
+        <div className="story-inner">
+          <ul className="story-list">
+            {items.map((s, i) => (
+              <Fragment key={s.title}>
+                {i === 0 && <li className="story-group">Projetos · entrega única</li>}
+                {i === split && <li className="story-group story-group-2">Gestão mensal · recorrente</li>}
+                <li className={`story-li ${i === active ? 'on' : ''}`}>
+                  <span className="story-dot" />
+                  <span className="story-li-txt">{s.title}</span>
+                </li>
+              </Fragment>
+            ))}
+          </ul>
+          <div className="story-card">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={cur.img} alt="" aria-hidden="true" className="story-card-bg" />
+            <span className="story-ghost" aria-hidden="true">{num}</span>
+            <div className="story-card-body" key={active}>
+              <span className="story-tag">{cur.tag}</span>
+              <h3 className="story-card-title">{cur.title}</h3>
+              <p className="story-card-desc">{cur.desc}</p>
+            </div>
+            <span className="story-count">{num}<i> / {tot}</i></span>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -626,29 +676,19 @@ export default function Home() {
         </section>
       ) : (
         <section id="servicos" style={{
-          padding: '10rem 3rem',
           background: 'var(--ds-surface)',
           borderTop: '1px solid var(--ds-border)',
         }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-            <div className="reveal" style={{ marginBottom: '4.5rem' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '10rem 3rem 3rem' }}>
+            <div className="reveal">
               <span className="ds-label" style={{ marginBottom: '1.5rem', display: 'block' }}>
                 O que fazemos
               </span>
               <MaskHeading style={{ fontSize: 'clamp(3rem, 7vw, 6rem)' }}
                 lines={[[{ text: 'Um setor,' }], [{ text: 'não um remendo.' }]]} />
             </div>
-
-            <div className="reveal reveal-delay-1">
-              <span className="svc-group-label">Projetos · entrega única</span>
-              <ServiceAccordion items={SERVICES_PROJETOS} startIndex={0} />
-            </div>
-
-            <div className="reveal reveal-delay-1" style={{ marginTop: '4.5rem' }}>
-              <span className="svc-group-label">Gestão mensal · recorrente</span>
-              <ServiceAccordion items={SERVICES_GESTAO} startIndex={SERVICES_PROJETOS.length} />
-            </div>
           </div>
+          <ServiceStory items={[...SERVICES_PROJETOS, ...SERVICES_GESTAO]} split={SERVICES_PROJETOS.length} />
         </section>
       )}
 

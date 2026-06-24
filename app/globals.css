@@ -560,47 +560,6 @@ body {
   color: rgba(255,255,255,0.5); line-height: 1.6; margin: 0;
 }
 
-/* ── Serviços: lista-acordeão (spotlight + imagem flutuante) ── */
-.svc-list { position: relative; }
-.svc-row {
-  position: relative;
-  display: flex; align-items: center; gap: 2rem;
-  padding: 1.6rem 0.5rem;
-  border-top: 1px solid var(--ds-border);
-  text-decoration: none;
-  transition: opacity 0.4s ease;
-}
-.svc-row:last-child { border-bottom: 1px solid var(--ds-border); }
-.svc-list:hover .svc-row { opacity: 0.28; }
-.svc-list .svc-row:hover { opacity: 1; }
-
-.svc-num {
-  font-family: var(--font-dm); font-size: 0.78rem; font-weight: 500;
-  color: var(--ds-text-gold); letter-spacing: 0.04em; flex-shrink: 0; min-width: 2.4rem;
-}
-.svc-title {
-  font-family: var(--font-bebas); font-weight: 400;
-  font-size: clamp(1.7rem, 3.1vw, 2.7rem); letter-spacing: 0.03em;
-  text-transform: uppercase; color: #fff; line-height: 1; white-space: nowrap;
-  flex-shrink: 0; transition: color 0.3s ease;
-}
-.svc-row:hover .svc-title { color: var(--gold); }
-.svc-desc {
-  font-family: var(--font-dm); font-weight: 300; font-size: 0.85rem;
-  color: rgba(255,255,255,0.5); line-height: 1.55; max-width: 320px;
-  opacity: 0; transform: translateX(-8px);
-  transition: opacity 0.45s ease, transform 0.45s ease;
-}
-.svc-row:hover .svc-desc { opacity: 1; transform: none; }
-.svc-float {
-  position: absolute; right: 5.5rem; top: 50%;
-  width: 150px; height: 200px; object-fit: cover; border-radius: 10px;
-  opacity: 0; pointer-events: none; z-index: 6;
-  transform: translateY(-50%) scale(0.96);
-  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.svc-row:hover .svc-float { opacity: 1; transform: translateY(-50%) scale(1); }
-
 /* ── Text reveal com máscara (palavras sobem de overflow:hidden) ── */
 .mask-line { display: block; overflow: hidden; padding-top: 0.12em; margin-top: -0.12em; }
 .mask-word { display: inline-block; margin-right: 0.24em; }
@@ -610,17 +569,89 @@ body {
   will-change: transform;
 }
 .mask-reveal.in .mask-word-in { transform: translateY(0); }
-.svc-plus {
-  margin-left: auto; flex-shrink: 0;
-  position: relative; width: 18px; height: 18px;
-  transition: transform 0.45s cubic-bezier(0.7, 0, 0.2, 1);
+
+/* ── Serviços: scrollytelling com palco fixo ── */
+.story { position: relative; }
+.story-stage {
+  position: sticky; top: 0; height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  overflow: hidden;
 }
-.svc-plus::before, .svc-plus::after {
-  content: ''; position: absolute; top: 50%; left: 50%; background: var(--gold);
+.story-prog {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px; z-index: 6;
+  background: rgba(255,255,255,0.07);
 }
-.svc-plus::before { width: 16px; height: 1.5px; transform: translate(-50%, -50%); }
-.svc-plus::after { width: 1.5px; height: 16px; transform: translate(-50%, -50%); }
-.svc-row:hover .svc-plus { transform: rotate(135deg); }
+.story-prog span {
+  display: block; height: 100%; width: 100%;
+  background: var(--gold); transform-origin: left; transform: scaleX(0);
+}
+.story-inner {
+  width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 3rem;
+  display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 4rem; align-items: center;
+}
+.story-list { list-style: none; margin: 0; padding: 0; }
+.story-group {
+  font-family: var(--font-dm); font-size: 0.62rem; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--ds-text-gold);
+  opacity: 0.65; margin-bottom: 0.9rem;
+}
+.story-group-2 { margin-top: 1.8rem; padding-top: 1.6rem; border-top: 1px solid var(--ds-border); }
+.story-li {
+  display: flex; align-items: center; gap: 0.9rem; padding: 0.42rem 0;
+  font-family: var(--font-bebas); font-weight: 400; text-transform: uppercase;
+  font-size: 1.55rem; letter-spacing: 0.03em; line-height: 1.1;
+  color: rgba(255,255,255,0.3); transition: color 0.4s ease;
+}
+.story-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.28); transition: all 0.4s ease;
+}
+.story-li.on { color: #fff; }
+.story-li.on .story-li-txt { color: var(--gold); }
+.story-li.on .story-dot { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
+
+.story-card {
+  position: relative; aspect-ratio: 4 / 3; border-radius: 20px; overflow: hidden;
+  border: 1px solid var(--ds-border); background: #0b0b0b;
+}
+.story-card-bg {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0.5; filter: grayscale(1) contrast(1.05);
+}
+.story-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(8,8,8,0.96) 8%, rgba(8,8,8,0.25) 55%, rgba(8,8,8,0.55));
+}
+.story-ghost {
+  position: absolute; top: -0.18em; right: 0.06em; z-index: 2; pointer-events: none;
+  font-family: var(--font-bebas); font-weight: 400; font-size: 13rem; line-height: 1;
+  color: rgba(255,255,255,0.055);
+}
+.story-card-body { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 2.6rem; }
+.story-card-body { animation: storyIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes storyIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.story-tag {
+  display: block; margin-bottom: 0.8rem;
+  font-family: var(--font-dm); font-size: 0.62rem; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+}
+.story-card-title {
+  margin: 0 0 0.85rem; font-family: var(--font-bebas); font-weight: 400;
+  text-transform: uppercase; letter-spacing: 0.03em; line-height: 1;
+  font-size: clamp(2rem, 3.4vw, 3rem); color: #fff;
+}
+.story-card-desc {
+  margin: 0; font-family: var(--font-dm); font-weight: 300; line-height: 1.6;
+  font-size: 0.95rem; color: rgba(255,255,255,0.62); max-width: 460px;
+}
+.story-count {
+  position: absolute; bottom: 2.6rem; right: 2.6rem; z-index: 4;
+  font-family: var(--font-dm); font-size: 0.85rem; color: #fff;
+}
+.story-count i { font-style: normal; color: rgba(255,255,255,0.4); }
+@media (prefers-reduced-motion: reduce) {
+  .story-card-body { animation: none; }
+}
 
 /* ── Moodboard — nossa linha de trabalho ── */
 .mood-grid {
@@ -906,6 +937,5 @@ body {
   .nav-link-text { transition: color 0.2s ease; }
   .nav-link-text:nth-child(2) { display: none; }
   .nav-link:hover .nav-link-text { transform: none; color: #fff; }
-  .svc-desc, .svc-float, .svc-plus { transition-duration: 0.01ms; }
   .mask-word-in { transform: none !important; transition: none; }
 }
