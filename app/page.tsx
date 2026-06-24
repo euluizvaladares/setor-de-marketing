@@ -247,56 +247,15 @@ const SERVICES_GESTAO = [
 type Service = { tag: string; title: string; img: string; desc: string }
 
 function ServiceAccordion({ items, startIndex = 0 }: { items: Service[]; startIndex?: number }) {
-  const listRef = useRef<HTMLDivElement>(null)
-  const floatRef = useRef<HTMLImageElement>(null)
-  const [src, setSrc] = useState(items[0].img)
-  const [on, setOn] = useState(false)
-
-  useEffect(() => {
-    const list = listRef.current, fl = floatRef.current
-    if (!list || !fl) return
-    const target = { x: 0, y: 0 }
-    const pos = { x: 0, y: 0 }
-    let raf = 0, running = false
-    const onMove = (e: MouseEvent) => {
-      const r = list.getBoundingClientRect()
-      target.x = e.clientX - r.left
-      target.y = e.clientY - r.top
-    }
-    const loop = () => {
-      pos.x += (target.x - pos.x) * 0.14
-      pos.y += (target.y - pos.y) * 0.14
-      fl.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`
-      if (running) raf = requestAnimationFrame(loop)
-    }
-    const start = (e: MouseEvent) => {
-      const r = list.getBoundingClientRect()
-      pos.x = target.x = e.clientX - r.left
-      pos.y = target.y = e.clientY - r.top
-      if (!running) { running = true; raf = requestAnimationFrame(loop) }
-    }
-    const stop = () => { running = false; cancelAnimationFrame(raf) }
-    list.addEventListener('mouseenter', start)
-    list.addEventListener('mousemove', onMove)
-    list.addEventListener('mouseleave', stop)
-    return () => {
-      list.removeEventListener('mouseenter', start)
-      list.removeEventListener('mousemove', onMove)
-      list.removeEventListener('mouseleave', stop)
-      cancelAnimationFrame(raf)
-    }
-  }, [])
-
   return (
-    <div className="svc-list" ref={listRef} onMouseLeave={() => setOn(false)}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img ref={floatRef} src={src} alt="" aria-hidden="true" className={`svc-float ${on ? 'on' : ''}`} />
+    <div className="svc-list">
       {items.map((s, i) => (
-        <a key={s.title} href="#orcamento" className="svc-row"
-          onMouseEnter={() => { setSrc(s.img); setOn(true) }}>
+        <a key={s.title} href="#orcamento" className="svc-row">
           <span className="svc-num">({String(startIndex + i + 1).padStart(2, '0')})</span>
           <span className="svc-title">{s.title}</span>
           <span className="svc-desc">{s.desc}</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={s.img} alt="" aria-hidden="true" className="svc-float" loading="lazy" />
           <span className="svc-plus" aria-hidden="true" />
         </a>
       ))}

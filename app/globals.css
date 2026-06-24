@@ -593,13 +593,13 @@ body {
 }
 .svc-row:hover .svc-desc { opacity: 1; transform: none; }
 .svc-float {
-  position: absolute; top: 0; left: 0;
+  position: absolute; right: 5.5rem; top: 50%;
   width: 150px; height: 200px; object-fit: cover; border-radius: 10px;
   opacity: 0; pointer-events: none; z-index: 6;
-  transition: opacity 0.35s ease;
-  will-change: transform;
+  transform: translateY(-50%) scale(0.96);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.svc-float.on { opacity: 1; }
+.svc-row:hover .svc-float { opacity: 1; transform: translateY(-50%) scale(1); }
 
 /* ── Text reveal com máscara (palavras sobem de overflow:hidden) ── */
 .mask-line { display: block; overflow: hidden; padding-top: 0.12em; margin-top: -0.12em; }
