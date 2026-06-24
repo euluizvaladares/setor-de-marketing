@@ -589,7 +589,15 @@ body {
   width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 3rem;
   display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 4rem; align-items: center;
 }
-.story-list { list-style: none; margin: 0; padding: 0; }
+.story-list-wrap {
+  position: relative; height: 64vh; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+}
+.story-list {
+  position: absolute; top: 0; left: 0; right: 0; list-style: none; margin: 0; padding: 0;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.15, 1); will-change: transform;
+}
 .story-group {
   font-family: var(--font-dm); font-size: 0.62rem; font-weight: 600;
   letter-spacing: 0.22em; text-transform: uppercase; color: var(--ds-text-gold);

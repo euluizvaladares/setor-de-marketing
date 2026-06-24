@@ -365,8 +365,20 @@ function ServiceStory({ items, split }: { items: Service[]; split: number }) {
   const N = items.length
   const wrapRef = useRef<HTMLDivElement>(null)
   const barRef = useRef<HTMLSpanElement>(null)
+  const listWrapRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLUListElement>(null)
   const [active, setActive] = useState(0)
   const activeRef = useRef(0)
+
+  // centraliza o item ativo na janela da lista (slide suave)
+  useEffect(() => {
+    const wrap = listWrapRef.current, list = listRef.current
+    if (!wrap || !list) return
+    const el = list.querySelector<HTMLElement>('.story-li.on')
+    if (!el) return
+    const y = wrap.clientHeight / 2 - (el.offsetTop + el.offsetHeight / 2)
+    list.style.transform = `translateY(${y}px)`
+  }, [active])
 
   useEffect(() => {
     const wrap = wrapRef.current
@@ -398,18 +410,20 @@ function ServiceStory({ items, split }: { items: Service[]; split: number }) {
       <div className="story-stage">
         <div className="story-prog"><span ref={barRef} /></div>
         <div className="story-inner">
-          <ul className="story-list">
-            {items.map((s, i) => (
-              <Fragment key={s.title}>
-                {i === 0 && <li className="story-group">Projetos · entrega única</li>}
-                {i === split && <li className="story-group story-group-2">Gestão mensal · recorrente</li>}
-                <li className={`story-li ${i === active ? 'on' : ''}`}>
-                  <span className="story-dot" />
-                  <span className="story-li-txt">{s.title}</span>
-                </li>
-              </Fragment>
-            ))}
-          </ul>
+          <div className="story-list-wrap" ref={listWrapRef}>
+            <ul className="story-list" ref={listRef}>
+              {items.map((s, i) => (
+                <Fragment key={s.title}>
+                  {i === 0 && <li className="story-group">Projetos · entrega única</li>}
+                  {i === split && <li className="story-group story-group-2">Gestão mensal · recorrente</li>}
+                  <li className={`story-li ${i === active ? 'on' : ''}`}>
+                    <span className="story-dot" />
+                    <span className="story-li-txt">{s.title}</span>
+                  </li>
+                </Fragment>
+              ))}
+            </ul>
+          </div>
           <div className="story-card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={cur.img} alt="" aria-hidden="true" className="story-card-bg" />
