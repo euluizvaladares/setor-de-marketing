@@ -295,7 +295,7 @@ function HeroManifesto({ mobile = false }: { mobile?: boolean }) {
               const delay = 0.25 + wi++ * 0.06
               return (
                 <span className="mask-word" key={`${li}-${ri}-${k}`}>
-                  <span className="mask-word-in" style={{ transitionDelay: `${delay}s`, color: run.gold ? 'var(--gold)' : undefined }}>{w}</span>{' '}
+                  <span className={`mask-word-in ${run.gold ? 'shimmer' : ''}`} style={{ transitionDelay: `${delay}s` }}>{w}</span>{' '}
                 </span>
               )
             })
@@ -331,7 +331,7 @@ function MaskHeading({ lines, style }: { lines: Run[][]; style?: React.CSSProper
               const delay = wi++ * 0.05
               return (
                 <span className="mask-word" key={`${li}-${ri}-${k}`}>
-                  <span className="mask-word-in" style={{ transitionDelay: `${delay}s`, color: run.gold ? 'var(--gold)' : undefined }}>{w}</span>{' '}
+                  <span className={`mask-word-in ${run.gold ? 'shimmer' : ''}`} style={{ transitionDelay: `${delay}s` }}>{w}</span>{' '}
                 </span>
               )
             })
@@ -462,12 +462,117 @@ function Marquee() {
   )
 }
 
+/* ─── Preloader / cortina de abertura ─── */
+function Preloader() {
+  const [gone, setGone] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setGone(true), 1250)
+    return () => clearTimeout(t)
+  }, [])
+  return (
+    <div className={`preloader ${gone ? 'gone' : ''}`} aria-hidden="true">
+      <span className="preloader-logo">SETOR</span>
+      <span className="preloader-sub">Setor de Marketing</span>
+    </div>
+  )
+}
+
+/* ─── Manifesto: linha que se desenha + palavras acendendo no scroll ─── */
+function ScrollManifesto({ paragraphs }: { paragraphs: string[] }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const lineRef = useRef<SVGLineElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const words = Array.from(el.querySelectorAll<HTMLSpanElement>('.lit-word'))
+    let raf = 0
+    const onScroll = () => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect()
+        const vh = window.innerHeight
+        const travel = r.height * 0.72 + vh * 0.12
+        const p = Math.min(1, Math.max(0, (vh * 0.78 - r.top) / travel))
+        const lit = Math.round(p * words.length)
+        for (let i = 0; i < words.length; i++) {
+          const on = i < lit
+          if (words[i].classList.contains('lit') !== on) words[i].classList.toggle('lit', on)
+        }
+        if (lineRef.current) lineRef.current.style.strokeDashoffset = String(1 - p)
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf) }
+  }, [])
+  return (
+    <div ref={ref} className="lit-wrap">
+      <svg className="lit-line" viewBox="0 0 2 100" preserveAspectRatio="none" aria-hidden="true">
+        <line ref={lineRef} x1="1" y1="0" x2="1" y2="100" pathLength={1}
+          style={{ strokeDasharray: 1, strokeDashoffset: 1 }} />
+      </svg>
+      <div className="lit-body">
+        {paragraphs.map((t, pi) => (
+          <p key={pi} className="lit-p">
+            {t.split(' ').map((w, i) => <span key={i} className="lit-word">{w} </span>)}
+          </p>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function Home() {
   const [scrolled, setScrolled] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [showCta, setShowCta] = useState(false)
   useReveal(isMobile)
   useMagnetic()
+
+  // Blur-up: imagens ainda carregando começam borradas e nítidas ao carregar (preserva filtros existentes)
+  useEffect(() => {
+    const id = setTimeout(() => {
+      document.querySelectorAll<HTMLImageElement>('img').forEach((img) => {
+        if (img.dataset.bu) return
+        img.dataset.bu = '1'
+        if (img.complete && img.naturalWidth > 0) return
+        const base = getComputedStyle(img).filter
+        const baseF = base && base !== 'none' ? base : ''
+        img.style.transition = 'filter 0.7s ease, opacity 0.7s ease'
+        img.style.opacity = '0'
+        img.style.filter = `blur(16px) ${baseF}`.trim()
+        img.addEventListener('load', () => {
+          img.style.opacity = '1'
+          img.style.filter = baseF
+        }, { once: true })
+      })
+    }, 0)
+    return () => clearTimeout(id)
+  }, [isMobile])
+
+  // Scramble: os rótulos de seção "decodificam" ao entrar na tela
+  useEffect(() => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÃÇÉ0123456789·'
+    const io = new IntersectionObserver((ents) => {
+      ents.forEach((e) => {
+        if (!e.isIntersecting) return
+        const el = e.target as HTMLElement
+        io.unobserve(el)
+        const final = el.dataset.final ?? el.textContent ?? ''
+        el.dataset.final = final
+        let frame = 0
+        const iv = setInterval(() => {
+          el.textContent = final.split('').map((c, i) =>
+            c === ' ' ? ' ' : (i < frame ? c : chars[Math.floor(Math.random() * chars.length)])
+          ).join('')
+          frame += 0.5
+          if (frame > final.length) { el.textContent = final; clearInterval(iv) }
+        }, 45)
+      })
+    }, { threshold: 0.7 })
+    document.querySelectorAll<HTMLElement>('.ds-label').forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [isMobile])
 
   useEffect(() => {
     const fn = () => {
@@ -492,6 +597,8 @@ export default function Home() {
 
   return (
     <main style={{ background: 'var(--ds-bg)', minHeight: '100vh' }}>
+      <Preloader />
+      <div className="grain" aria-hidden="true" />
 
       {/* ─── NAV ─── */}
       <nav style={{
@@ -709,7 +816,7 @@ export default function Home() {
       {/* ─── MANIFESTO ─── */}
       <section id="sobre" style={{
         padding: isMobile ? '5rem 1.5rem' : '10rem 3rem',
-        background: 'var(--ds-bg)',
+        background: 'radial-gradient(70% 55% at 80% 20%, rgba(184,152,90,0.06), transparent 70%), var(--ds-bg)',
         borderTop: '1px solid var(--ds-border)',
       }}>
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
@@ -720,21 +827,11 @@ export default function Home() {
             <MaskHeading style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', marginBottom: '3rem' }}
               lines={[[{ text: 'Marketing não é' }], [{ text: 'performance.' }], [{ text: 'É presença.', gold: true }]]} />
           </div>
-          <div className="reveal-stagger" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '5rem' }}>
-            {[
-              'Você investe pra aparecer. Para de investir, some — e perde mercado pra quem não parou.',
-              'Quando um negócio não é visto como o que realmente é, o dono paga o preço toda semana: argumenta mais pra fechar venda, abaixa o preço, aceita clientes ruins, assume custos que não são seus.',
-              'A vitrine dita o preço. Um visual amador faz o cliente pedir desconto antes de ouvir a proposta. Uma presença sólida justifica o valor antes de qualquer palavra ser dita.',
-            ].map((text, i) => (
-              <p key={i} style={{
-                fontFamily: 'var(--font-dm)', fontWeight: 300,
-                fontSize: 'clamp(1rem, 1.4vw, 1.1rem)',
-                color: 'rgba(255,255,255,0.55)', lineHeight: 1.8,
-                paddingLeft: '1.5rem',
-                borderLeft: '1px solid var(--ds-border)',
-              }}>{text}</p>
-            ))}
-          </div>
+          <ScrollManifesto paragraphs={[
+            'Você investe pra aparecer. Para de investir, some — e perde mercado pra quem não parou.',
+            'Quando um negócio não é visto como o que realmente é, o dono paga o preço toda semana: argumenta mais pra fechar venda, abaixa o preço, aceita clientes ruins, assume custos que não são seus.',
+            'A vitrine dita o preço. Um visual amador faz o cliente pedir desconto antes de ouvir a proposta. Uma presença sólida justifica o valor antes de qualquer palavra ser dita.',
+          ]} />
 
           {/* Moodboard — nossa linha de trabalho */}
           <div className="reveal">
@@ -899,7 +996,7 @@ export default function Home() {
       {/* ─── ORÇAMENTO ─── */}
       <section id="orcamento" style={{
         padding: isMobile ? '5rem 1.5rem' : '10rem 3rem',
-        background: 'var(--ds-surface)',
+        background: 'radial-gradient(60% 60% at 50% 60%, rgba(184,152,90,0.08), transparent 70%), var(--ds-surface)',
         borderTop: '1px solid var(--ds-border)',
         textAlign: 'center',
       }}>
