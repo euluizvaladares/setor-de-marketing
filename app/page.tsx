@@ -466,13 +466,12 @@ function Marquee() {
 function Preloader() {
   const [gone, setGone] = useState(false)
   useEffect(() => {
-    const t = setTimeout(() => setGone(true), 1250)
+    const t = setTimeout(() => setGone(true), 700)
     return () => clearTimeout(t)
   }, [])
   return (
     <div className={`preloader ${gone ? 'gone' : ''}`} aria-hidden="true">
-      <span className="preloader-logo">SETOR</span>
-      <span className="preloader-sub">Setor de Marketing</span>
+      <Image src="/logo.png" alt="Setor de Marketing" width={230} height={120} priority className="preloader-logo" />
     </div>
   )
 }
