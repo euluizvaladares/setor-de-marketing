@@ -27,7 +27,7 @@ function HeroReveal({ mobile = false }: { mobile?: boolean }) {
       playsInline
       style={{
         position: 'absolute', inset: 0, width: '100%', height: '100%',
-        objectFit: 'cover', objectPosition: 'right center',
+        objectFit: 'contain', objectPosition: 'center', backgroundColor: '#080808',
       }}
     />
   )
