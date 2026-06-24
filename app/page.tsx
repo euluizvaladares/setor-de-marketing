@@ -682,43 +682,56 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Caso real — Biocenter */}
-          <div className="reveal reveal-delay-2" style={{
-            background: 'var(--ds-surface)',
-            border: '1px solid var(--ds-border)',
-            borderRadius: '20px',
-            padding: '3rem',
-          }}>
-            <span style={{
-              fontFamily: 'var(--font-dm)',
-              fontSize: '0.6rem',
-              fontWeight: 700,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: 'var(--gold)',
-              display: 'block',
-              marginBottom: '1.5rem',
-            }}>
-              Caso real
+          {/* Moodboard — nossa linha de trabalho */}
+          <div className="reveal">
+            <span className="ds-label" style={{ marginBottom: '1.75rem', display: 'block' }}>
+              Nossa linha de trabalho
             </span>
-            <p style={{
-              fontFamily: 'var(--font-dm)', fontWeight: 300,
-              fontSize: 'clamp(1rem, 1.4vw, 1.1rem)',
-              color: 'rgba(255,255,255,0.7)', lineHeight: 1.8,
-            }}>
-              O Helton, da Biocenter, já era conhecido em Itamarandiba como o desbravador das novidades tecnológicas.
-              A excelência já estava lá. Mas o site era horrível e os posts eram feios.
-              Existia um abismo entre o que ele era e o que as pessoas viam quando procuravam o laboratório.
-            </p>
-            <p style={{
-              fontFamily: 'var(--font-dm)', fontWeight: 300,
-              fontSize: 'clamp(1rem, 1.4vw, 1.1rem)',
-              color: 'rgba(255,255,255,0.45)', lineHeight: 1.8,
-              marginTop: '1rem',
-            }}>
-              Nosso trabalho não foi inventar uma imagem. Foi fechar esse abismo.
-              Durante o contrato, ele abriu um segundo ponto de coleta.
-            </p>
+            <div className="mood-grid">
+              {/* eslint-disable @next/next/no-img-element */}
+              <figure className="mood-tile mood-img mood-tall">
+                <img src="/svc-identidade.webp" alt="" loading="lazy" />
+                <figcaption>Editorial, não panfletário</figcaption>
+              </figure>
+
+              <div className="mood-tile mood-principle">
+                <span className="mood-k">01</span>
+                <h4>A vitrine dita o preço</h4>
+                <p>A estética não é enfeite — é argumento de venda. Imagem impecável justifica o valor antes de qualquer palavra.</p>
+              </div>
+
+              <div className="mood-tile mood-palette">
+                <div className="mood-swatches">
+                  <span style={{ background: '#0a0a0a' }} />
+                  <span style={{ background: '#f4f1ea' }} />
+                  <span style={{ background: 'var(--gold)' }} />
+                </div>
+                <span className="mood-cap">Preto · Branco · Ouro</span>
+              </div>
+
+              <div className="mood-tile mood-principle">
+                <span className="mood-k">02</span>
+                <h4>Um setor, não um remendo</h4>
+                <p>Estratégia, tráfego e visual sob o mesmo teto, na mesma velocidade. Não vendemos peças soltas.</p>
+              </div>
+
+              <figure className="mood-tile mood-img">
+                <img src="/svc-trafego.webp" alt="" loading="lazy" />
+                <figcaption>Menos, porém impecável</figcaption>
+              </figure>
+
+              <div className="mood-tile mood-type">
+                <span className="mood-aa">Aa</span>
+                <span className="mood-cap">Bebas Neue · DM Sans</span>
+              </div>
+
+              <div className="mood-tile mood-principle mood-wide">
+                <span className="mood-k">03</span>
+                <h4>Revelar o que já existe</h4>
+                <p>Não criamos máscara. Projetamos a verdade do seu negócio com tanta força que o mercado não tem como ignorar.</p>
+              </div>
+              {/* eslint-enable @next/next/no-img-element */}
+            </div>
           </div>
         </div>
       </section>

@@ -622,6 +622,76 @@ body {
 .svc-plus::after { width: 1.5px; height: 16px; transform: translate(-50%, -50%); }
 .svc-row:hover .svc-plus { transform: rotate(135deg); }
 
+/* ── Moodboard — nossa linha de trabalho ── */
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 12px;
+}
+.mood-tile {
+  border: 1px solid var(--ds-border);
+  border-radius: 14px;
+  background: var(--ds-surface);
+  overflow: hidden;
+  min-height: 158px;
+}
+.mood-tall { grid-row: span 2; }
+.mood-wide { grid-column: span 2; }
+
+.mood-img { position: relative; margin: 0; }
+.mood-img img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) contrast(1.05); }
+.mood-img figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 1.4rem 1.2rem 1.1rem;
+  font-family: var(--font-dm); font-size: 0.66rem; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.88), transparent);
+}
+.mood-principle {
+  padding: 1.7rem; display: flex; flex-direction: column; gap: 0.7rem;
+  justify-content: center;
+}
+.mood-k {
+  font-family: var(--font-dm); font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.2em; color: var(--gold);
+}
+.mood-principle h4 {
+  margin: 0; font-family: var(--font-bebas); font-weight: 400;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  font-size: clamp(1.25rem, 1.9vw, 1.7rem); color: #fff; line-height: 1.02;
+}
+.mood-principle p {
+  margin: 0; font-family: var(--font-dm); font-weight: 300;
+  font-size: 0.84rem; color: rgba(255,255,255,0.5); line-height: 1.6;
+}
+.mood-palette {
+  padding: 1.7rem; display: flex; flex-direction: column;
+  justify-content: center; gap: 1.1rem;
+}
+.mood-swatches { display: flex; gap: 0.55rem; }
+.mood-swatches span {
+  width: 38px; height: 38px; border-radius: 9px; border: 1px solid var(--ds-border);
+}
+.mood-type {
+  padding: 1.7rem; display: flex; flex-direction: column;
+  justify-content: center; gap: 0.5rem;
+}
+.mood-aa {
+  font-family: var(--font-bebas); font-weight: 400; line-height: 0.85;
+  font-size: 3.6rem; color: var(--gold);
+}
+.mood-cap {
+  font-family: var(--font-dm); font-size: 0.66rem; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.5);
+}
+@media (max-width: 768px) {
+  .mood-grid { grid-template-columns: 1fr; grid-auto-rows: auto; gap: 10px; }
+  .mood-tall, .mood-wide { grid-row: auto; grid-column: auto; }
+  .mood-tile { min-height: auto; }
+  .mood-img { aspect-ratio: 16 / 10; }
+}
+
 /* ── Investimento (dois modelos de contratação) ── */
 .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 .inv-card {
