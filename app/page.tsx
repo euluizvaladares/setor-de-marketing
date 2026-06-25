@@ -479,51 +479,6 @@ function Preloader() {
   )
 }
 
-/* ─── Manifesto: linha que se desenha + palavras acendendo no scroll ─── */
-function ScrollManifesto({ paragraphs }: { paragraphs: string[] }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const lineRef = useRef<SVGLineElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const words = Array.from(el.querySelectorAll<HTMLSpanElement>('.lit-word'))
-    let raf = 0
-    const onScroll = () => {
-      cancelAnimationFrame(raf)
-      raf = requestAnimationFrame(() => {
-        const r = el.getBoundingClientRect()
-        const vh = window.innerHeight
-        const travel = r.height * 0.72 + vh * 0.12
-        const p = Math.min(1, Math.max(0, (vh * 0.78 - r.top) / travel))
-        const lit = Math.round(p * words.length)
-        for (let i = 0; i < words.length; i++) {
-          const on = i < lit
-          if (words[i].classList.contains('lit') !== on) words[i].classList.toggle('lit', on)
-        }
-        if (lineRef.current) lineRef.current.style.strokeDashoffset = String(1 - p)
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf) }
-  }, [])
-  return (
-    <div ref={ref} className="lit-wrap">
-      <svg className="lit-line" viewBox="0 0 2 100" preserveAspectRatio="none" aria-hidden="true">
-        <line ref={lineRef} x1="1" y1="0" x2="1" y2="100" pathLength={1}
-          style={{ strokeDasharray: 1, strokeDashoffset: 1 }} />
-      </svg>
-      <div className="lit-body">
-        {paragraphs.map((t, pi) => (
-          <p key={pi} className="lit-p">
-            {t.split(' ').map((w, i) => <span key={i} className="lit-word">{w} </span>)}
-          </p>
-        ))}
-      </div>
-    </div>
-  )
-}
-
 export default function Home() {
   const [scrolled, setScrolled] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -815,75 +770,38 @@ export default function Home() {
         </section>
       )}
 
-      {/* ─── MANIFESTO ─── */}
+      {/* ─── FUNDADOR ─── */}
       <section id="sobre" style={{
         padding: isMobile ? '5rem 1.5rem' : '10rem 3rem',
         background: 'radial-gradient(70% 55% at 80% 20%, rgba(184,152,90,0.06), transparent 70%), var(--ds-bg)',
         borderTop: '1px solid var(--ds-border)',
       }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-          <div className="reveal">
-            <span className="ds-label" style={{ marginBottom: '2rem', display: 'block' }}>
-              Como pensamos
-            </span>
-            <MaskHeading style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', marginBottom: '3rem' }}
-              lines={[[{ text: 'Marketing não é' }], [{ text: 'performance.' }], [{ text: 'É presença.', gold: true }]]} />
+        <div style={{
+          maxWidth: '1080px', margin: '0 auto',
+          display: 'flex', flexDirection: isMobile ? 'column' : 'row',
+          gap: isMobile ? '2.5rem' : '5rem', alignItems: 'center',
+        }}>
+          <div className="reveal founder-photo-wrap">
+            <div className="founder-photo">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/founder.webp" alt="Luiz Valadares, fundador da Setor de Marketing" loading="lazy" />
+            </div>
           </div>
-          <ScrollManifesto paragraphs={[
-            'Você investe pra aparecer. Para de investir, some — e perde mercado pra quem não parou.',
-            'Quando um negócio não é visto como o que realmente é, o dono paga o preço toda semana: argumenta mais pra fechar venda, abaixa o preço, aceita clientes ruins, assume custos que não são seus.',
-            'A vitrine dita o preço. Um visual amador faz o cliente pedir desconto antes de ouvir a proposta. Uma presença sólida justifica o valor antes de qualquer palavra ser dita.',
-          ]} />
 
-          {/* Moodboard — nossa linha de trabalho */}
-          <div className="reveal">
-            <span className="ds-label" style={{ marginBottom: '1.75rem', display: 'block' }}>
-              Nossa linha de trabalho
+          <div className="reveal reveal-delay-1" style={{ flex: 1 }}>
+            <span className="ds-label" style={{ marginBottom: '1.5rem', display: 'block' }}>
+              Quem está por trás
             </span>
-            <div className="mood-grid">
-              {/* eslint-disable @next/next/no-img-element */}
-              <figure className="mood-tile mood-img mood-tall">
-                <img src="/svc-identidade.webp" alt="" loading="lazy" />
-                <figcaption>Editorial, não panfletário</figcaption>
-              </figure>
-
-              <div className="mood-tile mood-principle">
-                <span className="mood-k">01</span>
-                <h4>A vitrine dita o preço</h4>
-                <p>A estética não é enfeite — é argumento de venda. Imagem impecável justifica o valor antes de qualquer palavra.</p>
-              </div>
-
-              <div className="mood-tile mood-palette">
-                <div className="mood-swatches">
-                  <span style={{ background: '#0a0a0a' }} />
-                  <span style={{ background: '#f4f1ea' }} />
-                  <span style={{ background: 'var(--gold)' }} />
-                </div>
-                <span className="mood-cap">Preto · Branco · Ouro</span>
-              </div>
-
-              <div className="mood-tile mood-principle">
-                <span className="mood-k">02</span>
-                <h4>Um setor, não um remendo</h4>
-                <p>Estratégia, tráfego e visual sob o mesmo teto, na mesma velocidade. Não vendemos peças soltas.</p>
-              </div>
-
-              <figure className="mood-tile mood-img">
-                <img src="/svc-trafego.webp" alt="" loading="lazy" />
-                <figcaption>Menos, porém impecável</figcaption>
-              </figure>
-
-              <div className="mood-tile mood-type">
-                <span className="mood-aa">Aa</span>
-                <span className="mood-cap">Bebas Neue · DM Sans</span>
-              </div>
-
-              <div className="mood-tile mood-principle mood-wide">
-                <span className="mood-k">03</span>
-                <h4>Revelar o que já existe</h4>
-                <p>Não criamos máscara. Projetamos a verdade do seu negócio com tanta força que o mercado não tem como ignorar.</p>
-              </div>
-              {/* eslint-enable @next/next/no-img-element */}
+            <MaskHeading style={{ fontSize: isMobile ? 'clamp(2.2rem, 10vw, 3rem)' : 'clamp(2.4rem, 4.2vw, 3.8rem)', marginBottom: '2rem' }}
+              lines={[[{ text: 'Não é agência.' }], [{ text: 'É o' }, { text: 'Luiz.', gold: true }]]} />
+            <div className="founder-body">
+              <p>Passei anos nos Estados Unidos construindo tudo do zero, sem rede de apoio. Voltei pro Brasil e escolhi Itamarandiba pra recomeçar.</p>
+              <p>Cheguei numa cidade onde &ldquo;marketing&rdquo; era o cara dos R$200 que fazia uma arte e sumia. Decidi mostrar o que a coisa pode ser de verdade: postura, estratégia e execução completa, no mesmo lugar.</p>
+              <p>Eu trato o seu negócio como se fosse o meu — porque já construí um do nada. E sei exatamente o quanto custa ser visto como menos do que você é.</p>
+            </div>
+            <div className="founder-sign">
+              <span className="founder-name">Luiz Valadares</span>
+              <span className="founder-role">Fundador · Setor de Marketing</span>
             </div>
           </div>
         </div>
