@@ -802,7 +802,7 @@ export default function Home() {
               Antes de qualquer título, eu sou parceiro de vida da <span>Nathália Mourão</span> e pai da <span>Maitê Mourão Valadares</span>. É por elas que eu faço o que faço — e é com esse mesmo cuidado que eu trato o que é seu.
             </p>
             <div className="founder-body">
-              <p>Sou de Ipatinga. Em 2017 fui pros Estados Unidos atrás de um sonho e acabei construindo tudo do zero, sem rede de apoio. Aprendi na marra o que é fazer acontecer sozinho.</p>
+              <p>Sou de Ipatinga. Passei quase 10 anos nos Estados Unidos, vivendo várias experiências de trabalho e de negócios — construindo tudo do zero, sem rede de apoio. Aprendi na marra o que é fazer acontecer sozinho.</p>
               <p>Voltei pro Brasil e escolhi Itamarandiba pra recomeçar, perto de quem importa. Cheguei numa cidade onde &ldquo;marketing&rdquo; era o cara dos R$200 que fazia uma arte e sumia.</p>
               <p>Comecei ajudando quem estava por perto — uma contabilidade, uma clínica, um laboratório — e mostrei o que a coisa pode ser de verdade: postura, estratégia e execução completa, no mesmo lugar.</p>
               <p>Eu trato o seu negócio como se fosse o meu. Não é força de expressão: tenho uma família pra cuidar e construí tudo do nada. Sei exatamente o quanto custa ser visto como menos do que você é.</p>
