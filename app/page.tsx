@@ -779,12 +779,16 @@ export default function Home() {
         <div style={{
           maxWidth: '1080px', margin: '0 auto',
           display: 'flex', flexDirection: isMobile ? 'column' : 'row',
-          gap: isMobile ? '2.5rem' : '5rem', alignItems: 'center',
+          gap: isMobile ? '2.5rem' : '5rem', alignItems: 'flex-start',
         }}>
           <div className="reveal founder-photo-wrap">
             <div className="founder-photo">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/founder.webp" alt="Luiz Valadares, fundador da Setor de Marketing" loading="lazy" />
+            </div>
+            <div className="founder-sign">
+              <span className="founder-name">Luiz Valadares</span>
+              <span className="founder-role">Fundador · Setor de Marketing</span>
             </div>
           </div>
 
@@ -794,14 +798,14 @@ export default function Home() {
             </span>
             <MaskHeading style={{ fontSize: isMobile ? 'clamp(2.2rem, 10vw, 3rem)' : 'clamp(2.4rem, 4.2vw, 3.8rem)', marginBottom: '2rem' }}
               lines={[[{ text: 'Não é agência.' }], [{ text: 'É o' }, { text: 'Luiz.', gold: true }]]} />
+            <p className="founder-lead">
+              Antes de qualquer título, eu sou parceiro de vida da <span>Nathália Mourão</span> e pai da <span>Maitê Mourão Valadares</span>. É por elas que eu faço o que faço — e é com esse mesmo cuidado que eu trato o que é seu.
+            </p>
             <div className="founder-body">
-              <p>Passei anos nos Estados Unidos construindo tudo do zero, sem rede de apoio. Voltei pro Brasil e escolhi Itamarandiba pra recomeçar.</p>
-              <p>Cheguei numa cidade onde &ldquo;marketing&rdquo; era o cara dos R$200 que fazia uma arte e sumia. Decidi mostrar o que a coisa pode ser de verdade: postura, estratégia e execução completa, no mesmo lugar.</p>
-              <p>Eu trato o seu negócio como se fosse o meu — porque já construí um do nada. E sei exatamente o quanto custa ser visto como menos do que você é.</p>
-            </div>
-            <div className="founder-sign">
-              <span className="founder-name">Luiz Valadares</span>
-              <span className="founder-role">Fundador · Setor de Marketing</span>
+              <p>Sou de Ipatinga. Em 2017 fui pros Estados Unidos atrás de um sonho e acabei construindo tudo do zero, sem rede de apoio. Aprendi na marra o que é fazer acontecer sozinho.</p>
+              <p>Voltei pro Brasil e escolhi Itamarandiba pra recomeçar, perto de quem importa. Cheguei numa cidade onde &ldquo;marketing&rdquo; era o cara dos R$200 que fazia uma arte e sumia.</p>
+              <p>Comecei ajudando quem estava por perto — uma contabilidade, uma clínica, um laboratório — e mostrei o que a coisa pode ser de verdade: postura, estratégia e execução completa, no mesmo lugar.</p>
+              <p>Eu trato o seu negócio como se fosse o meu. Não é força de expressão: tenho uma família pra cuidar e construí tudo do nada. Sei exatamente o quanto custa ser visto como menos do que você é.</p>
             </div>
           </div>
         </div>
