@@ -8,14 +8,14 @@ function HeroReveal({ mobile = false }: { mobile?: boolean }) {
     return (
       // eslint-disable-next-line jsx-a11y/media-has-caption
       <video
-        src="/hero-video.mp4"
+        src="/hero-video-mobile.mp4"
         autoPlay
         muted
         loop
         playsInline
         style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'contain', objectPosition: 'right center', backgroundColor: '#050505',
+          objectFit: 'cover', objectPosition: 'center 28%', backgroundColor: '#050505',
         }}
       />
     )
