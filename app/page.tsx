@@ -776,8 +776,8 @@ export default function Home() {
         background: 'radial-gradient(70% 55% at 80% 20%, rgba(184,152,90,0.06), transparent 70%), var(--ds-bg)',
         borderTop: '1px solid var(--ds-border)',
       }}>
+        <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
         <div style={{
-          maxWidth: '1080px', margin: '0 auto',
           display: 'flex', flexDirection: isMobile ? 'column' : 'row',
           gap: isMobile ? '2.5rem' : '5rem', alignItems: 'flex-start',
         }}>
@@ -808,6 +808,27 @@ export default function Home() {
               <p>Eu trato o seu negócio como se fosse o meu. Não é força de expressão: tenho uma família pra cuidar e construí tudo do nada. Sei exatamente o quanto custa ser visto como menos do que você é.</p>
             </div>
           </div>
+        </div>
+
+        <div className="reveal" style={{ marginTop: isMobile ? '3.5rem' : '5.5rem' }}>
+          <span className="ds-label" style={{ marginBottom: '1.75rem', display: 'block' }}>Da estrada até aqui</span>
+          <div className="mural">
+            {[
+              { img: '/mural-1.webp', cap: 'O sonho que me levou' },
+              { img: '/mural-2.webp', cap: 'Trabalho pesado, lá fora' },
+              { img: '/mural-3.webp', cap: 'Aprendi de tudo' },
+              { img: '/mural-4.webp', cap: 'Anos longe de casa' },
+              { img: '/mural-5.webp', cap: 'O motivo de voltar' },
+              { img: '/mural-6.webp', cap: 'A marca, do zero' },
+            ].map((m) => (
+              <figure key={m.img} className="mural-item">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={m.img} alt="" loading="lazy" />
+                <figcaption>{m.cap}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
         </div>
       </section>
 

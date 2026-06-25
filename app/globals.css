@@ -706,6 +706,24 @@ body {
 }
 @media (min-width: 769px) { .founder-photo-wrap { max-width: none; } }
 
+/* ── Mural (jornada do fundador) ── */
+.mural { column-count: 3; column-gap: 14px; }
+.mural-item {
+  break-inside: avoid; margin: 0 0 14px; position: relative;
+  border-radius: 12px; overflow: hidden; border: 1px solid var(--ds-border);
+}
+.mural-item img { width: 100%; display: block; }
+.mural-item figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 1.6rem 1rem 0.95rem;
+  font-family: var(--font-dm); font-size: 0.64rem; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase; color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+}
+@media (max-width: 768px) {
+  .mural { column-count: 2; column-gap: 10px; }
+  .mural-item { margin-bottom: 10px; }
+}
+
 /* ── Preloader (cortina de abertura) ── */
 .preloader {
   position: fixed; inset: 0; z-index: 9999; background: #080808;
