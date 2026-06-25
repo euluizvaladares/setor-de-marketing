@@ -5,14 +5,17 @@ import Image from 'next/image'
 
 function HeroReveal({ mobile = false }: { mobile?: boolean }) {
   if (mobile) {
-    // eslint-disable-next-line @next/next/no-img-element
     return (
-      <img
-        src="/hero-clean.webp"
-        alt=""
+      // eslint-disable-next-line jsx-a11y/media-has-caption
+      <video
+        src="/hero-video.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
         style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'cover', objectPosition: '68% 6%',
+          objectFit: 'contain', objectPosition: 'right center', backgroundColor: '#050505',
         }}
       />
     )
